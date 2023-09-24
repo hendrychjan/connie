@@ -1,3 +1,4 @@
+import 'package:connie/getx/app_controller.dart';
 import 'package:hive/hive.dart';
 
 part 'financial_record.g.dart';
@@ -10,18 +11,30 @@ class FinancialRecord {
   String id;
 
   @HiveField(1)
-  DateTime date;
+  String title;
 
   @HiveField(2)
   double amount;
 
   @HiveField(3)
-  String comment;
+  DateTime date;
+
+  @HiveField(4)
+  String? comment;
 
   FinancialRecord(
     this.id,
-    this.date,
+    this.title,
     this.amount,
+    this.date,
     this.comment,
   );
+
+  Future<void> save() async {
+    await AppController.to.hiveService.financialRecordBox!.put(id, this);
+  }
+
+  static Future<FinancialRecord?> getById(String id) async {
+    return await AppController.to.hiveService.financialRecordBox!.get(id);
+  }
 }

@@ -18,23 +18,26 @@ class IncomeAdapter extends TypeAdapter<Income> {
     };
     return Income(
       fields[0] as String,
-      fields[1] as DateTime,
+      fields[1] as String,
       fields[2] as double,
-      fields[3] as String,
+      fields[3] as DateTime,
+      fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Income obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.date)
+      ..write(obj.title)
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
+      ..write(obj.date)
+      ..writeByte(4)
       ..write(obj.comment);
   }
 
