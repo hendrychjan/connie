@@ -6,7 +6,7 @@ class LocalTheme {
   static ThemeData _buildTheme() {
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.green,
+        seedColor: Colors.blue,
       ),
       useMaterial3: true,
     );
