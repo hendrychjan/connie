@@ -8,20 +8,20 @@ part 'expense.g.dart';
 
 @HiveType(typeId: 1)
 class Expense extends FinancialRecord {
-  Expense(
-    String id,
-    String title,
-    double amount,
-    DateTime date,
-    String? comment,
-  ) : super(id, title, amount, date, comment);
+  Expense({
+    required super.id,
+    required super.title,
+    required super.amount,
+    required super.date,
+    required super.comment,
+  });
 
   @override
   Future<void> save() async {
-    await AppController.to.hiveService.expenseBox!.put(id, this);
+    await AppController.to.hiveService.expenseBox.put(id, this);
   }
 
   static Future<Expense?> getById(String id) async {
-    return await AppController.to.hiveService.expenseBox!.get(id);
+    return await AppController.to.hiveService.expenseBox.get(id);
   }
 }

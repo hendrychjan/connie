@@ -17,11 +17,11 @@ class FinancialRecordAdapter extends TypeAdapter<FinancialRecord> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FinancialRecord(
-      fields[0] as String,
-      fields[1] as String,
-      fields[2] as double,
-      fields[3] as DateTime,
-      fields[4] as String?,
+      id: fields[0] as String,
+      title: fields[1] as String,
+      amount: fields[2] as double,
+      date: fields[3] as DateTime,
+      comment: fields[4] as String?,
     );
   }
 

@@ -17,9 +17,9 @@ class CategoryOnRecordAdapter extends TypeAdapter<CategoryOnRecord> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CategoryOnRecord(
-      fields[0] as String,
-      fields[1] as String,
-      fields[2] as String,
+      id: fields[0] as String,
+      recordId: fields[1] as String,
+      categoryId: fields[2] as String,
     );
   }
 

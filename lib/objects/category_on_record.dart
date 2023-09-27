@@ -16,13 +16,13 @@ class CategoryOnRecord {
   @HiveField(2)
   String categoryId;
 
-  CategoryOnRecord(
-    this.id,
-    this.recordId,
-    this.categoryId,
-  );
+  CategoryOnRecord({
+    required this.id,
+    required this.recordId,
+    required this.categoryId,
+  });
 
   Future<void> save() async {
-    await AppController.to.hiveService.categoryOnRecordBox!.put(id, this);
+    await AppController.to.hiveService.categoryOnRecordBox.put(id, this);
   }
 }

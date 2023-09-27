@@ -16,17 +16,21 @@ class Category {
   @HiveField(3)
   String colorHex;
 
-  Category(
-    this.id,
-    this.title,
-    this.colorHex,
-  );
+  Category({
+    required this.id,
+    required this.title,
+    required this.colorHex,
+  });
 
   Future<void> save() async {
-    await AppController.to.hiveService.categoryBox!.put(id, this);
+    await AppController.to.hiveService.categoryBox.put(id, this);
+  }
+
+  Future<void> delete() async {
+    await AppController.to.hiveService.categoryBox.delete(id);
   }
 
   static Future<Category?> getById(String id) async {
-    return AppController.to.hiveService.categoryBox!.get(id);
+    return AppController.to.hiveService.categoryBox.get(id);
   }
 }

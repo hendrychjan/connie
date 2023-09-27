@@ -22,19 +22,19 @@ class FinancialRecord {
   @HiveField(4)
   String? comment;
 
-  FinancialRecord(
-    this.id,
-    this.title,
-    this.amount,
-    this.date,
-    this.comment,
-  );
+  FinancialRecord({
+    required this.id,
+    required this.title,
+    required this.amount,
+    required this.date,
+    required this.comment,
+  });
 
   Future<void> save() async {
-    await AppController.to.hiveService.financialRecordBox!.put(id, this);
+    await AppController.to.hiveService.financialRecordBox.put(id, this);
   }
 
   static Future<FinancialRecord?> getById(String id) async {
-    return await AppController.to.hiveService.financialRecordBox!.get(id);
+    return await AppController.to.hiveService.financialRecordBox.get(id);
   }
 }

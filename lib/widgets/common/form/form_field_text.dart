@@ -1,5 +1,6 @@
 import 'package:connie/services/validation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FormFieldText extends StatefulWidget {
   final String hint;
@@ -13,6 +14,7 @@ class FormFieldText extends StatefulWidget {
   final int? maxLines;
   final int? maxLength;
   final bool? enabled;
+  final Color? themeColor;
 
   const FormFieldText({
     required this.hint,
@@ -26,6 +28,7 @@ class FormFieldText extends StatefulWidget {
     this.maxLines,
     this.maxLength,
     this.enabled = true,
+    this.themeColor,
     super.key,
   });
 
@@ -45,6 +48,9 @@ class _FormFieldTextState extends State<FormFieldText> {
         decoration: InputDecoration(
           labelText: widget.hint,
           prefixIcon: widget.icon,
+          fillColor:
+              widget.themeColor ?? Get.theme.primaryColor.withOpacity(0.05),
+          filled: true,
         ),
         obscureText: widget.obscureText,
         validator: (value) {
