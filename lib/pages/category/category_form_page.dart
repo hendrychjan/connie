@@ -44,7 +44,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          (widget.initialCategory == null) ? "New Category" : "Edit category",
+          (widget.initialCategory == null) ? "New category" : "Edit category",
         ),
         actions: [
           if (widget.initialCategory != null)

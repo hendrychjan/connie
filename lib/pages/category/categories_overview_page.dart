@@ -1,5 +1,5 @@
 import 'package:connie/getx/app_controller.dart';
-import 'package:connie/pages/categories/category_form_page.dart';
+import 'package:connie/pages/category/category_form_page.dart';
 import 'package:connie/widgets/category/categories_list_widget.dart';
 import 'package:connie/widgets/common/no_items_widget.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:connie/objects/category.dart';
-import 'package:connie/pages/categories/category_form_page.dart';
+import 'package:connie/pages/category/category_form_page.dart';
 import 'package:connie/ui/local_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -14,6 +14,8 @@ class FormFieldText extends StatefulWidget {
   final int? maxLines;
   final int? maxLength;
   final bool? enabled;
+  final bool? readOnly;
+  final Function? onTap;
   final Color? themeColor;
 
   const FormFieldText({
@@ -28,6 +30,8 @@ class FormFieldText extends StatefulWidget {
     this.maxLines,
     this.maxLength,
     this.enabled = true,
+    this.readOnly = false,
+    this.onTap,
     this.themeColor,
     super.key,
   });
@@ -65,6 +69,8 @@ class _FormFieldTextState extends State<FormFieldText> {
         minLines: widget.minLines ?? 1,
         maxLines: widget.maxLines ?? 1,
         enabled: widget.enabled,
+        readOnly: widget.readOnly ?? false,
+        onTap: (widget.onTap != null) ? () => widget.onTap!() : () {},
       ),
     );
   }

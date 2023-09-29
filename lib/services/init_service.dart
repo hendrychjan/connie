@@ -10,6 +10,7 @@ class InitService {
   static Future<void> initApp() async {
     await _initHive();
     await _initControllerServices();
+    await _initControllerFields();
   }
 
   static Future<void> _initHive() async {
@@ -24,5 +25,11 @@ class InitService {
 
   static Future<void> _initControllerServices() async {
     await AppController.to.hiveService.init();
+  }
+
+  static Future<void> _initControllerFields() async {
+    // Weekly records
+    AppController.to.weeklyRecords.addAll(await FinancialRecord.getThisWeek());
+    AppController.to.weeklyRecordsHook();
   }
 }

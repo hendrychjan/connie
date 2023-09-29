@@ -16,12 +16,8 @@ class Income extends FinancialRecord {
     required super.comment,
   });
 
-  @override
-  Future<void> save() async {
-    await AppController.to.hiveService.incomeBox.put(id, this);
-  }
-
   static Future<Income?> getById(String id) async {
-    return await AppController.to.hiveService.incomeBox.get(id);
+    return await AppController.to.hiveService.financialRecordBox.get(id)
+        as Income?;
   }
 }

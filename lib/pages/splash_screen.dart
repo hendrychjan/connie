@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 5), () async {
       await InitService.initApp();
 
-      Get.to(() => const HomePage());
+      Get.offAll(() => const HomePage());
     });
   }
 

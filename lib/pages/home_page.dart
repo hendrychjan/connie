@@ -1,5 +1,7 @@
-import 'package:connie/forms/expense_form.dart';
-import 'package:connie/pages/categories/categories_overview_page.dart';
+import 'package:connie/getx/app_controller.dart';
+import 'package:connie/pages/category/categories_overview_page.dart';
+import 'package:connie/pages/financial_record/expense_form_page.dart';
+import 'package:connie/widgets/financial_record/financial_records_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,19 +13,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void _openCreateRecordDialog() async {
-    Get.dialog(AlertDialog.adaptive(
-      content: ExpenseForm(
-        onSubmit: () {},
-      ),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Connie"),
+        scrolledUnderElevation: 0.0,
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -48,14 +43,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _openCreateRecordDialog,
+        onPressed: () => Get.to(() => const ExpenseFormPage()),
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      body: const Column(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Card(
+          const Card(
             child: Column(
               children: [
                 Padding(
@@ -74,7 +69,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          Card(
+          const Card(
             child: Column(
               children: [
                 Padding(
@@ -94,42 +89,11 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.shopping_cart,
-              color: Colors.redAccent,
+          const Divider(),
+          Expanded(
+            child: FinancialRecordsListWidget(
+              records: AppController.to.weeklyRecords,
             ),
-            title: Text(
-              "- 38 Kč",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text("Nákup"),
-            trailing: Text("15.2. 10:31"),
-          ),
-          ListTile(
-            leading: Icon(Icons.savings),
-            title: Text("+ 180 Kč"),
-            subtitle: Text("Kapesné"),
-            trailing: Text("15.2. 10:31"),
-          ),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text("- 38 Kč"),
-            subtitle: Text("Nákup"),
-            trailing: Text("15.2. 10:31"),
-          ),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text("- 38 Kč"),
-            subtitle: Text("Nákup"),
-            trailing: Text("15.2. 10:31"),
-          ),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text("- 38 Kč"),
-            subtitle: Text("Nákup"),
-            trailing: Text("15.2. 10:31"),
           ),
         ],
       ),

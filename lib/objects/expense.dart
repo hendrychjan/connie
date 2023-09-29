@@ -1,5 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/financial_record.dart';
+import 'package:connie/services/hive_service.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 part 'expense.g.dart';
@@ -16,12 +18,8 @@ class Expense extends FinancialRecord {
     required super.comment,
   });
 
-  @override
-  Future<void> save() async {
-    await AppController.to.hiveService.expenseBox.put(id, this);
-  }
-
   static Future<Expense?> getById(String id) async {
-    return await AppController.to.hiveService.expenseBox.get(id);
+    return await AppController.to.hiveService.financialRecordBox.get(id)
+        as Expense?;
   }
 }
