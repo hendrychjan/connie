@@ -1,4 +1,6 @@
 import 'package:connie/getx/app_controller.dart';
+import 'package:connie/objects/category_on_record.dart';
+import 'package:connie/objects/financial_record.dart';
 import 'package:hive/hive.dart';
 
 part 'category.g.dart';
@@ -32,5 +34,21 @@ class Category {
 
   static Future<Category?> getById(String id) async {
     return AppController.to.hiveService.categoryBox.get(id);
+  }
+
+  static Future<List<Category>> getAllByRecord(FinancialRecord record) async {
+    List<Category> categories = [];
+    for (var key in AppController.to.hiveService.categoryOnRecordBox.keys) {
+      CategoryOnRecord? cor =
+          await AppController.to.hiveService.categoryOnRecordBox.get(key);
+      if (cor != null && cor.recordId == record.id) {
+        categories.addAll(
+          AppController.to.hiveService.categoryBox.values
+              .where((c) => c.id == cor.categoryId),
+        );
+      }
+    }
+
+    return categories;
   }
 }

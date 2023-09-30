@@ -1,4 +1,6 @@
 import 'package:connie/forms/expense_form.dart';
+import 'package:connie/objects/category.dart';
+import 'package:connie/objects/category_on_record.dart';
 import 'package:connie/objects/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,11 +16,13 @@ class ExpenseFormPage extends StatefulWidget {
 class _ExpenseFormPageState extends State<ExpenseFormPage> {
   bool _loading = false;
 
-  Future<void> _handleSubmit(Expense payload) async {
+  Future<void> _handleSubmit(Expense payload, List<Category> categories) async {
     setState(() {
       _loading = true;
     });
     await payload.save();
+    await CategoryOnRecord.deleteAllByRecord(payload);
+    await CategoryOnRecord.createAllByRecord(payload, categories);
     setState(() {
       _loading = true;
     });
@@ -33,6 +37,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     // called from a widget that is rendered conditionally when the
     // initialExpense is not null
     await widget.initialExpense!.delete();
+    await CategoryOnRecord.deleteAllByRecord(widget.initialExpense!);
     setState(() {
       _loading = true;
     });

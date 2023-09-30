@@ -1,4 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
+import 'package:connie/objects/category.dart';
+import 'package:connie/objects/financial_record.dart';
+import 'package:connie/services/hive_service.dart';
 import 'package:hive/hive.dart';
 
 part 'category_on_record.g.dart';
@@ -24,5 +27,30 @@ class CategoryOnRecord {
 
   Future<void> save() async {
     await AppController.to.hiveService.categoryOnRecordBox.put(id, this);
+  }
+
+  Future<void> delete() async {
+    await AppController.to.hiveService.categoryOnRecordBox.delete(id);
+  }
+
+  static Future<void> createAllByRecord(
+      FinancialRecord record, List<Category> categories) async {
+    for (Category category in categories) {
+      await CategoryOnRecord(
+        id: HiveService.generateId(),
+        categoryId: category.id,
+        recordId: record.id,
+      ).save();
+    }
+  }
+
+  static Future<void> deleteAllByRecord(FinancialRecord record) async {
+    for (var key in AppController.to.hiveService.categoryOnRecordBox.keys) {
+      CategoryOnRecord? cor =
+          await AppController.to.hiveService.categoryOnRecordBox.get(key);
+      if (cor != null && cor.recordId == record.id) {
+        await AppController.to.hiveService.categoryOnRecordBox.delete(key);
+      }
+    }
   }
 }

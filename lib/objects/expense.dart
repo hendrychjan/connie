@@ -1,7 +1,5 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/financial_record.dart';
-import 'package:connie/services/hive_service.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 part 'expense.g.dart';
