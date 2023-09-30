@@ -54,6 +54,7 @@ class _FormFieldDatetimeState extends State<FormFieldDatetime> {
       );
     });
     _textController.text = _formatDateForTextField(_selected);
+    widget.controller.text = _selected.toIso8601String();
   }
 
   @override
