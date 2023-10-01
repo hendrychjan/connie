@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () async {
+    Future.delayed(Duration.zero, () async {
       await InitService.initApp();
 
       if (AppController.to.firstTimeOpened) {
