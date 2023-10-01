@@ -5,12 +5,19 @@ import 'package:connie/objects/expense.dart';
 import 'package:connie/objects/financial_record.dart';
 import 'package:connie/objects/income.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class InitService {
   static Future<void> initApp() async {
     await _initHive();
     await _initControllerServices();
     await _initControllerFields();
+    await _initAppInfo();
+  }
+
+  static Future<void> _initAppInfo() async {
+    PackageInfo pi = await PackageInfo.fromPlatform();
+    AppController.to.appVersion = pi.version;
   }
 
   static Future<void> _initHive() async {

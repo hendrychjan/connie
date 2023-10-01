@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class AppController extends GetxController {
   static AppController get to => Get.find();
 
+  String appVersion = "";
   bool firstTimeOpened = false;
 
   RxDouble currentBalance = 0.0.obs;

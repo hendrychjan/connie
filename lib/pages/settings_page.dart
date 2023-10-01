@@ -53,6 +53,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               },
             ),
+            Expanded(child: Container()),
+            Center(
+              child: Text(
+                "v${AppController.to.appVersion}\nby Jan Hendrych",
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
