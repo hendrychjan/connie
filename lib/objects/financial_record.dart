@@ -1,4 +1,6 @@
 import 'package:connie/getx/app_controller.dart';
+import 'package:connie/objects/category.dart';
+import 'package:connie/objects/category_on_record.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -32,9 +34,32 @@ class FinancialRecord {
     required this.comment,
   });
 
-  Future<void> save() async {
+  Future<void> save(List<Category> categories) async {
+    if (!AppController.to.hiveService.financialRecordBox.containsKey(id)) {
+      // Creating the object
+      // ...create relationships
+      await CategoryOnRecord.createAllByRecord(this, categories);
+
+      // ...update the global 'currentBalance'
+      AppController.to.currentBalance.value += amount;
+    } else {
+      // Updating the object
+      // ...update relationships
+      await CategoryOnRecord.deleteAllByRecord(this);
+      await CategoryOnRecord.createAllByRecord(this, categories);
+
+      // ...compute the netto amount, and update the global 'currentBalance'
+      FinancialRecord previousRecord =
+          await AppController.to.hiveService.financialRecordBox.get(id);
+      AppController.to.currentBalance.value -= previousRecord.amount - amount;
+    }
+    AppController.to.hiveService.preferencesBox
+        .put("currentBalance", AppController.to.currentBalance.value);
+
+    // Save the object to DB
     await AppController.to.hiveService.financialRecordBox.put(id, this);
 
+    // If it belongs to the current period, then run the period update hook
     if (HiveService.isDateInWeek(date)) {
       int index;
       if ((index = AppController.to.weeklyRecords
@@ -49,8 +74,18 @@ class FinancialRecord {
   }
 
   Future<void> delete() async {
-    await AppController.to.hiveService.financialRecordBox.put(id, this);
+    // Delete all relationships
+    await CategoryOnRecord.deleteAllByRecord(this);
 
+    // Update the global 'currentBalance'
+    AppController.to.currentBalance.value -= amount;
+    AppController.to.hiveService.preferencesBox
+        .put("currentBalance", AppController.to.currentBalance.value);
+
+    // Delete the object from DB
+    await AppController.to.hiveService.financialRecordBox.delete(id);
+
+    // If it belongs to the current period, then run the period update hook
     if (HiveService.isDateInWeek(date)) {
       AppController.to.weeklyRecords.removeWhere((element) => element.id == id);
       AppController.to.weeklyRecordsHook();

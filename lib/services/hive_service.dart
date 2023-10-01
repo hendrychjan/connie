@@ -4,11 +4,14 @@ import 'package:connie/objects/category_on_record.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveService {
+  late Box preferencesBox;
   late Box<Category> categoryBox;
   late LazyBox<CategoryOnRecord> categoryOnRecordBox;
   late LazyBox financialRecordBox;
 
   Future<void> init() async {
+    preferencesBox = await Hive.openBox('preferences');
+
     categoryBox = await Hive.openBox<Category>('category');
 
     categoryOnRecordBox =

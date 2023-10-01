@@ -1,3 +1,5 @@
+import 'package:connie/getx/app_controller.dart';
+import 'package:connie/pages/first_time_setup_page.dart';
 import 'package:connie/pages/home_page.dart';
 import 'package:connie/services/init_service.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,11 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 5), () async {
       await InitService.initApp();
 
-      Get.offAll(() => const HomePage());
+      if (AppController.to.firstTimeOpened) {
+        Get.offAll(() => const FirstTimeSetupPage());
+      } else {
+        Get.offAll(() => const HomePage());
+      }
     });
   }
 

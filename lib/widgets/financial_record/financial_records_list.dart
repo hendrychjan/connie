@@ -30,7 +30,7 @@ class _FinancialRecordsListWidgetState
   Widget _renderTitle(FinancialRecord record) {
     if (record is Expense) {
       return Text(
-        "- ${record.amount}",
+        record.amount.toString(),
         style: const TextStyle(
           color: Colors.redAccent,
         ),

@@ -35,7 +35,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
     if (widget.initialExpense != null) {
       _titleController.text = widget.initialExpense!.title;
-      _amountController.text = widget.initialExpense!.amount.toString();
+      _amountController.text = (-widget.initialExpense!.amount).toString();
       _dateController.text = widget.initialExpense!.date.toIso8601String();
       _commentController.text = widget.initialExpense!.comment ?? "";
       Future.delayed(Duration.zero, () async {
@@ -91,12 +91,18 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
 
+                    // In case of an Expense, the 'amount' should always be
+                    // a negative number
+                    double actualAmount =
+                        double.tryParse(_amountController.text) ?? 0;
+                    if (actualAmount > 0) actualAmount = -actualAmount;
+
                     await widget.onSubmit(
                       Expense(
                         id: widget.initialExpense?.id ??
                             HiveService.generateId(),
                         title: _titleController.text,
-                        amount: double.tryParse(_amountController.text) ?? 0,
+                        amount: actualAmount,
                         date: DateTime.tryParse(_dateController.text) ??
                             DateTime.now(),
                         comment: _commentController.text,

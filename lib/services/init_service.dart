@@ -28,7 +28,17 @@ class InitService {
   }
 
   static Future<void> _initControllerFields() async {
-    // Weekly records
+    // Check if this is the first time the app has been opened
+    AppController.to.firstTimeOpened =
+        !AppController.to.hiveService.preferencesBox.containsKey("everOpened");
+
+    // Load the currentBalance
+    AppController.to.currentBalance.value = (await AppController
+            .to.hiveService.preferencesBox
+            .get("currentBalance")) ??
+        0.0;
+
+    // Load the period (weekly) records
     AppController.to.weeklyRecords.addAll(await FinancialRecord.getThisWeek());
     AppController.to.weeklyRecordsHook();
   }
