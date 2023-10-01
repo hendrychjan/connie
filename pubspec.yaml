@@ -2,7 +2,7 @@ name: connie
 description: Keep your coins together with my 8th remake of an expense manager. Hope this is the final version.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.1+1
+version: 1.0.0+1
 
 environment:
   sdk: '>=3.1.1 <4.0.0'
