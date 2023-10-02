@@ -25,22 +25,25 @@ class FormFieldDropdown extends StatefulWidget {
 class _FormFieldDropdownState extends State<FormFieldDropdown> {
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu(
-      initialSelection: widget.initialSelection,
-      dropdownMenuEntries: widget.items,
-      inputDecorationTheme: InputDecorationTheme(
-        fillColor: Get.theme.primaryColor.withOpacity(0.05),
-        filled: true,
-      ),
-      label: Text(widget.hint),
-      leadingIcon: widget.icon,
-      onSelected: (value) {
-        widget.controller.text = value.toString();
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      child: DropdownMenu(
+        initialSelection: widget.initialSelection,
+        dropdownMenuEntries: widget.items,
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: Get.theme.primaryColor.withOpacity(0.05),
+          filled: true,
+        ),
+        label: Text(widget.hint),
+        leadingIcon: widget.icon,
+        onSelected: (value) {
+          widget.controller.text = value.toString();
 
-        if (widget.onSelected != null) {
-          widget.onSelected!(value);
-        }
-      },
+          if (widget.onSelected != null) {
+            widget.onSelected!(value);
+          }
+        },
+      ),
     );
   }
 }

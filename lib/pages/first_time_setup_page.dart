@@ -1,7 +1,7 @@
 import 'package:connie/forms/first_time_setup_form.dart';
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/home_page.dart';
-import 'package:connie/widgets/common/privacy_notice_widget.dart';
+import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,13 +25,7 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
   }
 
   void _openPrivacyNotice() {
-    Get.dialog(AlertDialog(
-      title: const Text("Privacy notice"),
-      content: const PrivacyNoticeWidget(),
-      actions: [
-        TextButton(onPressed: () => Get.back(), child: const Text("Ok")),
-      ],
-    ));
+    Get.dialog(const PrivacyNoticeDialog());
   }
 
   @override
