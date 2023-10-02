@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LocalTheme {
   static get defaultTheme => _buildTheme();
@@ -19,6 +20,16 @@ class LocalTheme {
     String radixString = "FF${color.substring(1)}";
     int? intColor = int.tryParse(radixString, radix: 16);
     return Color(intColor ?? 0xFFFFFFFF);
+  }
+
+  static void changeThemeMode(String theme) {
+    if (theme == "light") {
+      Get.changeThemeMode(ThemeMode.light);
+    } else if (theme == "dart") {
+      Get.changeThemeMode(ThemeMode.dark);
+    } else {
+      Get.changeThemeMode(ThemeMode.system);
+    }
   }
 
   static ThemeData _buildTheme() {
