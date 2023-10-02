@@ -25,7 +25,7 @@ class LocalTheme {
   static void changeThemeMode(String theme) {
     if (theme == "light") {
       Get.changeThemeMode(ThemeMode.light);
-    } else if (theme == "dart") {
+    } else if (theme == "dark") {
       Get.changeThemeMode(ThemeMode.dark);
     } else {
       Get.changeThemeMode(ThemeMode.system);
