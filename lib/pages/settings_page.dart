@@ -1,7 +1,9 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/ui/local_theme.dart';
 import 'package:connie/widgets/common/form/form_field_dropdown.dart';
+import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -49,6 +51,10 @@ class _SettingsPageState extends State<SettingsPage> {
 class _AppStatisticsSection extends StatelessWidget {
   const _AppStatisticsSection();
 
+  void _openPrivacyNoticeDialog() {
+    Get.dialog(const PrivacyNoticeDialog());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -71,15 +77,22 @@ class _AppStatisticsSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      "Categories: ${AppController.to.hiveService.categoryBox.length}"),
+                    "Categories: ${AppController.to.hiveService.categoryBox.length}",
+                  ),
                   Text(
-                      "Categories on Records: ${AppController.to.hiveService.categoryOnRecordBox.length}"),
+                    "Categories on Records: ${AppController.to.hiveService.categoryOnRecordBox.length}",
+                  ),
                   Text(
-                      "Financial records: ${AppController.to.hiveService.financialRecordBox.length}"),
+                    "Financial records: ${AppController.to.hiveService.financialRecordBox.length}",
+                  ),
                 ],
               );
             },
-          )
+          ),
+          TextButton(
+            onPressed: _openPrivacyNoticeDialog,
+            child: const Text("Privacy notice"),
+          ),
         ],
       ),
     );
@@ -138,13 +151,16 @@ class __SectionHeaderState extends State<_SectionHeader> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 15, top: 15),
+          padding: const EdgeInsets.only(top: 15),
           child: Text(
             widget.title,
             style: const TextStyle(fontSize: 18),
           ),
         ),
-        const Divider(),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: Divider(),
+        ),
       ],
     );
   }
