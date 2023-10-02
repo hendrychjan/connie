@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class LocalTheme {
   static get defaultTheme => _buildTheme();
+  static get defaultDarkTheme => _buildDarkTheme();
 
   static String colorToHexString(Color color) {
     String res = "#";
@@ -21,10 +22,22 @@ class LocalTheme {
   }
 
   static ThemeData _buildTheme() {
-    return ThemeData(
+    return ThemeData.light().copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
+        brightness: Brightness.light,
       ),
+      useMaterial3: true,
+    );
+  }
+
+  static ThemeData _buildDarkTheme() {
+    return ThemeData.dark().copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: Colors.black,
       useMaterial3: true,
     );
   }

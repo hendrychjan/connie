@@ -4,13 +4,15 @@ import 'package:connie/ui/local_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
   Get.put(AppController());
 
   runApp(
     GetMaterialApp(
       title: 'Connie',
-      theme: LocalTheme.defaultTheme,
+      theme: (Get.isPlatformDarkMode)
+          ? LocalTheme.defaultDarkTheme
+          : LocalTheme.defaultTheme,
       home: const SplashScreen(),
     ),
   );
