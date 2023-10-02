@@ -1,12 +1,13 @@
 import 'package:connie/objects/financial_record.dart';
 import 'package:connie/services/hive_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AppController extends GetxController {
   static AppController get to => Get.find();
 
   String appVersion = "";
-  bool firstTimeOpened = false;
+  late Widget firstPage;
 
   RxDouble currentBalance = 0.0.obs;
   RxDouble periodExpenses = 0.0.obs;

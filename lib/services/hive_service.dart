@@ -33,8 +33,9 @@ class HiveService {
     int endOfWeekDay = DateTime.sunday,
   }) {
     DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
 
-    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: endOfWeekDay - 1));
 
     return date.isAfter(startOfWeek) && date.isBefore(endOfWeek);

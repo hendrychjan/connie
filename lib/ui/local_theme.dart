@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LocalTheme {
   static get defaultTheme => _buildTheme();
+  static get defaultDarkTheme => _buildDarkTheme();
 
   static String colorToHexString(Color color) {
     String res = "#";
@@ -20,11 +22,33 @@ class LocalTheme {
     return Color(intColor ?? 0xFFFFFFFF);
   }
 
+  static void changeThemeMode(String theme) {
+    if (theme == "light") {
+      Get.changeThemeMode(ThemeMode.light);
+    } else if (theme == "dart") {
+      Get.changeThemeMode(ThemeMode.dark);
+    } else {
+      Get.changeThemeMode(ThemeMode.system);
+    }
+  }
+
   static ThemeData _buildTheme() {
-    return ThemeData(
+    return ThemeData.light().copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
+        brightness: Brightness.light,
       ),
+      useMaterial3: true,
+    );
+  }
+
+  static ThemeData _buildDarkTheme() {
+    return ThemeData.dark().copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: Colors.black,
       useMaterial3: true,
     );
   }
