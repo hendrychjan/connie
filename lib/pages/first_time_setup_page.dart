@@ -1,6 +1,7 @@
 import 'package:connie/forms/first_time_setup_form.dart';
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/home_page.dart';
+import 'package:connie/widgets/common/privacy_notice_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +24,16 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
     Get.offAll(() => const HomePage());
   }
 
+  void _openPrivacyNotice() {
+    Get.dialog(AlertDialog(
+      title: const Text("Privacy notice"),
+      content: const PrivacyNoticeWidget(),
+      actions: [
+        TextButton(onPressed: () => Get.back(), child: const Text("Ok")),
+      ],
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +41,7 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
         title: const Text("Quick setup"),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
@@ -43,6 +54,16 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
             ),
           ),
           FirstTimeSetupForm(onSubmit: _handleSubmit),
+          Expanded(
+            child: Container(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: TextButton(
+              onPressed: _openPrivacyNotice,
+              child: const Text("How do we handle your data?"),
+            ),
+          ),
         ],
       ),
     );

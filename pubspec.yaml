@@ -18,6 +18,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   intl: ^0.18.1
   package_info_plus: ^4.1.0
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:
