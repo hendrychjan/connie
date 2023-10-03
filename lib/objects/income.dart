@@ -13,7 +13,7 @@ class Income extends FinancialRecord {
     required super.title,
     required super.amount,
     required super.date,
-    required super.comment,
+    super.comment,
   });
 
   static Future<Income?> getById(String id) async {

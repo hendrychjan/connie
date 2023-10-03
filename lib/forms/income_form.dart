@@ -1,5 +1,5 @@
 import 'package:connie/objects/category.dart';
-import 'package:connie/objects/expense.dart';
+import 'package:connie/objects/income.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:connie/widgets/category/select_categories_widget.dart';
 import 'package:connie/widgets/common/form/form_field_datetime.dart';
@@ -7,20 +7,20 @@ import 'package:connie/widgets/common/form/form_field_divider.dart';
 import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
 
-class ExpenseForm extends StatefulWidget {
+class IncomeForm extends StatefulWidget {
   final Function onSubmit;
-  final Expense? initialExpense;
-  const ExpenseForm({
+  final Income? initialIncome;
+  const IncomeForm({
     super.key,
     required this.onSubmit,
-    this.initialExpense,
+    this.initialIncome,
   });
 
   @override
-  State<ExpenseForm> createState() => _ExpenseFormState();
+  State<IncomeForm> createState() => _IncomeFormState();
 }
 
-class _ExpenseFormState extends State<ExpenseForm> {
+class _IncomeFormState extends State<IncomeForm> {
   bool _loading = true;
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
@@ -33,14 +33,14 @@ class _ExpenseFormState extends State<ExpenseForm> {
   void initState() {
     super.initState();
 
-    if (widget.initialExpense != null) {
-      _titleController.text = widget.initialExpense!.title;
-      _amountController.text = (-widget.initialExpense!.amount).toString();
-      _dateController.text = widget.initialExpense!.date.toIso8601String();
-      _commentController.text = widget.initialExpense!.comment ?? "";
+    if (widget.initialIncome != null) {
+      _titleController.text = widget.initialIncome!.title;
+      _amountController.text = widget.initialIncome!.amount.toString();
+      _dateController.text = widget.initialIncome!.date.toIso8601String();
+      _commentController.text = widget.initialIncome!.comment ?? "";
       Future.delayed(Duration.zero, () async {
         List<Category> categories =
-            await Category.getAllByRecord(widget.initialExpense!);
+            await Category.getAllByRecord(widget.initialIncome!);
         _categories.addAll(categories);
         setState(() {
           _loading = false;
@@ -91,18 +91,12 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
 
-                    // In case of an Expense, the 'amount' should always be
-                    // a negative number
-                    double actualAmount =
-                        double.tryParse(_amountController.text) ?? 0;
-                    if (actualAmount > 0) actualAmount = -actualAmount;
-
                     await widget.onSubmit(
-                      Expense(
-                        id: widget.initialExpense?.id ??
+                      Income(
+                        id: widget.initialIncome?.id ??
                             HiveService.generateId(),
                         title: _titleController.text,
-                        amount: actualAmount,
+                        amount: double.tryParse(_amountController.text) ?? 0.0,
                         date: DateTime.tryParse(_dateController.text) ??
                             DateTime.now(),
                         comment: _commentController.text,
@@ -111,7 +105,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     );
                   },
                   child: Text(
-                    (widget.initialExpense == null) ? "Create" : "Update",
+                    (widget.initialIncome == null) ? "Create" : "Update",
                   ),
                 ),
               ],

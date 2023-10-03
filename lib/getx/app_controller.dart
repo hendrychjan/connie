@@ -1,3 +1,4 @@
+import 'package:connie/objects/expense.dart';
 import 'package:connie/objects/financial_record.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,9 @@ class AppController extends GetxController {
     // Update the periodExpenses field accordingly
     periodExpenses.value = 0.0;
     for (FinancialRecord r in weeklyRecords) {
-      periodExpenses.value += r.amount;
+      if (r is Expense) {
+        periodExpenses.value += r.amount;
+      }
     }
   }
 }
