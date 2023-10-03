@@ -1,6 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/category/categories_overview_page.dart';
 import 'package:connie/pages/financial_record/expense_form_page.dart';
+import 'package:connie/pages/financial_record/income_form_page.dart';
 import 'package:connie/pages/settings_page.dart';
 import 'package:connie/widgets/financial_record/finance_card_widget.dart';
 import 'package:connie/widgets/financial_record/financial_records_list.dart';
@@ -15,6 +16,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void _openNewRecordDialog() {
+    Get.dialog(AlertDialog(
+      title: const Text("Create"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              Get.back();
+              Get.to(() => const ExpenseFormPage());
+            },
+            icon: const Icon(Icons.shopping_cart),
+            label: const Text("Expense"),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Get.back();
+              Get.to(() => const IncomeFormPage());
+            },
+            icon: const Icon(Icons.add_card),
+            label: const Text("Income"),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: Get.back, child: const Text("Cancel")),
+      ],
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.to(() => const ExpenseFormPage()),
+        onPressed: _openNewRecordDialog,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
