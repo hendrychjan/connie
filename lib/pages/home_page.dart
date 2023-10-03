@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
           FinanceCardWidget(
             value: AppController.to.periodExpenses,
             title: "Weekly expenses",
+            color: Colors.redAccent,
           ),
           const Divider(),
           Expanded(
