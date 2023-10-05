@@ -1,6 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/ui/local_theme.dart';
 import 'package:connie/widgets/common/form/form_field_dropdown.dart';
+import 'package:connie/widgets/common/loading_text_button.dart';
 import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   _AppStatisticsSection(),
                   _SectionHeader(title: "Appearance"),
                   _AppearanceSection(),
+                  _SectionHeader(title: "Data"),
+                  _DataSection(),
                 ],
               ),
             ),
@@ -48,12 +51,43 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class _AppStatisticsSection extends StatelessWidget {
-  const _AppStatisticsSection();
+class _DataSection extends StatefulWidget {
+  const _DataSection();
 
-  void _openPrivacyNoticeDialog() {
+  @override
+  State<_DataSection> createState() => _DataSectionState();
+}
+
+class _DataSectionState extends State<_DataSection> {
+  void _openPrivacyNoticeDialog() async {
     Get.dialog(const PrivacyNoticeDialog());
   }
+
+  Future<void> _handleBackupData() async {
+    await AppController.to.hiveService.backupApplicationData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        LoadingTextButton(
+          onPressed: _handleBackupData,
+          icon: const Icon(Icons.cloud_upload),
+          label: "Create backup",
+        ),
+        TextButton.icon(
+          onPressed: _openPrivacyNoticeDialog,
+          icon: const Icon(Icons.info),
+          label: const Text("Privacy notice"),
+        ),
+      ],
+    );
+  }
+}
+
+class _AppStatisticsSection extends StatelessWidget {
+  const _AppStatisticsSection();
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +122,6 @@ class _AppStatisticsSection extends StatelessWidget {
                 ],
               );
             },
-          ),
-          TextButton(
-            onPressed: _openPrivacyNoticeDialog,
-            child: const Text("Privacy notice"),
           ),
         ],
       ),

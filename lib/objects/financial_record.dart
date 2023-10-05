@@ -31,8 +31,19 @@ class FinancialRecord {
     required this.title,
     required this.amount,
     required this.date,
-    required this.comment,
+    this.comment,
   });
+
+  Map toMap() {
+    return {
+      "objtype": "FinancialRecords",
+      "id": id,
+      "title": title,
+      "amount": amount,
+      "date": date.toIso8601String(),
+      "comment": comment,
+    };
+  }
 
   Future<void> save(List<Category> categories) async {
     if (!AppController.to.hiveService.financialRecordBox.containsKey(id)) {

@@ -16,6 +16,13 @@ class Income extends FinancialRecord {
     super.comment,
   });
 
+  @override
+  Map toMap() {
+    Map map = super.toMap();
+    map["objtype"] = "Income";
+    return map;
+  }
+
   static Future<Income?> getById(String id) async {
     return await AppController.to.hiveService.financialRecordBox.get(id)
         as Income?;

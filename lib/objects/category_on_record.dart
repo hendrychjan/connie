@@ -25,6 +25,14 @@ class CategoryOnRecord {
     required this.categoryId,
   });
 
+  Map toMap() {
+    return {
+      "id": id,
+      "recordId": recordId,
+      "categoryId": categoryId,
+    };
+  }
+
   Future<void> save() async {
     await AppController.to.hiveService.categoryOnRecordBox.put(id, this);
   }

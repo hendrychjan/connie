@@ -24,6 +24,14 @@ class Category {
     required this.colorHex,
   });
 
+  Map toMap() {
+    return {
+      "id": id,
+      "title": title,
+      "colorHex": colorHex,
+    };
+  }
+
   Future<void> save() async {
     await AppController.to.hiveService.categoryBox.put(id, this);
   }
