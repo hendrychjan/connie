@@ -24,6 +24,14 @@ class Category {
     required this.colorHex,
   });
 
+  factory Category.fromMap(Map map) {
+    return Category(
+      id: map["id"],
+      title: map["title"],
+      colorHex: map["colorHex"],
+    );
+  }
+
   Map toMap() {
     return {
       "id": id,

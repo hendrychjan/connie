@@ -25,6 +25,14 @@ class CategoryOnRecord {
     required this.categoryId,
   });
 
+  factory CategoryOnRecord.fromMap(Map map) {
+    return CategoryOnRecord(
+      id: map["id"],
+      recordId: map["recordId"],
+      categoryId: map["categoryId"],
+    );
+  }
+
   Map toMap() {
     return {
       "id": id,

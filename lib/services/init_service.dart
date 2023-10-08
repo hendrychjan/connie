@@ -17,7 +17,7 @@ class InitService {
     _registerGetxSingletons();
     await _initHive();
     await _initControllerServices();
-    await _initControllerFields();
+    await initControllerFields();
     await _initAppInfo();
     _initAppTheme();
   }
@@ -40,7 +40,7 @@ class InitService {
     await AppController.to.hiveService.init();
   }
 
-  static Future<void> _initControllerFields() async {
+  static Future<void> initControllerFields() async {
     // Check if this is the first time the app has been opened
     if (AppController.to.hiveService.preferencesBox.containsKey("everOpened")) {
       AppController.to.firstPage = const HomePage();

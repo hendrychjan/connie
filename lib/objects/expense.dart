@@ -16,6 +16,15 @@ class Expense extends FinancialRecord {
     super.comment,
   });
 
+  factory Expense.fromMap(Map map) {
+    return Expense(
+      id: map["id"],
+      title: map["title"],
+      amount: double.parse(map["amount"].toString()),
+      date: DateTime.parse(map["date"]),
+    );
+  }
+
   @override
   Map toMap() {
     Map map = super.toMap();

@@ -34,6 +34,15 @@ class FinancialRecord {
     this.comment,
   });
 
+  factory FinancialRecord.fromMap(Map map) {
+    return FinancialRecord(
+      id: map["id"],
+      title: map["title"],
+      amount: double.parse(map["amount"].toString()),
+      date: DateTime.parse(map["date"]),
+    );
+  }
+
   Map toMap() {
     return {
       "objtype": "FinancialRecords",
