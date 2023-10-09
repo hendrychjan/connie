@@ -5,12 +5,16 @@ import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/category.dart';
 import 'package:connie/objects/category_on_record.dart';
 import 'package:connie/objects/expense.dart';
+import 'package:connie/objects/financial_record.dart';
 import 'package:connie/objects/income.dart';
 import 'package:connie/objects/parseable_object.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:connie/services/init_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Provides two public methods to backup the application data, and then
 /// restore it using a given restore strategy
@@ -50,6 +54,24 @@ class BackupService {
   late LazyBox tempFinancialRecordBox;
   late LazyBox tempCategoryOnRecordBox;
 
+  /// Serialize app data into a file and let the user save it somewhere
+  Future<void> backupApplicationData() async {
+    // Generate a map that contains all of the application's data
+    Map backupMap = await _generateBackupData();
+
+    // Serializa the map into a file
+    String backupFilePath = await _writeBackupIntoFile(backupMap);
+
+    // Let the user save the backup file somewhere
+    await _shareBackupFile(backupFilePath);
+    // The file must not be deleted, because the share can take some time to
+    // complete (e.g. on google disk, when it is waiting for wifi connection)
+    // and so the file has to be available later. The file will eventually
+    // be deleted after some time (days), or when manual storage cleanup is
+    // invoked by the user.
+  }
+
+  /// Restore application data from a user provided backup file
   Future<void> restoreApplicationData(MergeStrategy strategy) async {
     // Read the file that contains the backup. Nothing to do here, really, when
     // implementing something new
@@ -77,6 +99,78 @@ class BackupService {
     // to the changes in hive boxes
     await InitService.initControllerFields();
     InitService.initAppTheme();
+  }
+
+  /// Provide the backup file to the user
+  Future<void> _shareBackupFile(String backupFilePath) async {
+    await Share.shareXFiles([XFile(backupFilePath)]);
+  }
+
+  /// Serialize the backup data into a file that is saved on disk
+  Future<String> _writeBackupIntoFile(Map backup) async {
+    // Generate the backup file's name
+    String date = DateFormat("dd-M-yyyy").format(DateTime.now());
+    String fileName = "connie_backup_${date}_${HiveService.generateId()}";
+    Directory dir = await getApplicationDocumentsDirectory();
+
+    // Create the backup file
+    File file = File("${dir.path}/$fileName.json");
+
+    // Serialize the backup data into that file
+    await file.writeAsString(jsonEncode(backup), flush: true);
+
+    return file.path;
+  }
+
+  /// Take all the application data and put it into a map
+  Future<Map<String, dynamic>> _generateBackupData() async {
+    Map<String, dynamic> backup = {};
+
+    // Get the preferences
+    Box preferencesBox = AppController.to.hiveService.preferencesBox;
+    backup["preferences"] = {
+      "theme": preferencesBox.get("theme"),
+      "currentBalance": preferencesBox.get("currentBalance"),
+    };
+
+    // Get the categories
+    Box categoryBox = AppController.to.hiveService.categoryBox;
+    backup["categories"] = [];
+    for (Category category in categoryBox.values) {
+      (backup["categories"] as List).add(category.toMap());
+    }
+
+    // Get the Financial Records
+    LazyBox financialRecordBox =
+        AppController.to.hiveService.financialRecordBox;
+    backup["financialRecords"] = {
+      "records": [],
+      "expenses": [],
+      "incomes": [],
+    };
+    for (var key in financialRecordBox.keys) {
+      FinancialRecord? record = await financialRecordBox.get(key);
+      if (record is Expense) {
+        (backup["financialRecords"]["expenses"] as List).add(record.toMap());
+      } else if (record is Income) {
+        (backup["financialRecords"]["incomes"] as List).add(record.toMap());
+      } else if (record != null) {
+        (backup["financialRecords"]["records"] as List).add(record.toMap());
+      }
+    }
+
+    // Get the relationships between categories and financial records
+    LazyBox categoryOnRecordBox =
+        AppController.to.hiveService.categoryOnRecordBox;
+    backup["categoriesOnRecords"] = [];
+    for (var key in categoryOnRecordBox.keys) {
+      CategoryOnRecord? cor = await categoryOnRecordBox.get(key);
+      if (cor != null) {
+        (backup["categoriesOnRecords"] as List).add(cor.toMap());
+      }
+    }
+
+    return backup;
   }
 
   /// Let the user select a file that contains the backup, and then decode it

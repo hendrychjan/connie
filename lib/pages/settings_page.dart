@@ -64,7 +64,7 @@ class _DataSectionState extends State<_DataSection> {
   }
 
   Future<void> _handleBackupData() async {
-    await AppController.to.hiveService.backupApplicationData();
+    await AppController.to.backupService.backupApplicationData();
   }
 
   @override
