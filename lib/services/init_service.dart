@@ -17,9 +17,9 @@ class InitService {
     _registerGetxSingletons();
     await _initHive();
     await _initControllerServices();
-    await _initControllerFields();
+    await initControllerFields();
     await _initAppInfo();
-    _initAppTheme();
+    initAppTheme();
   }
 
   static void _registerGetxSingletons() {
@@ -40,7 +40,7 @@ class InitService {
     await AppController.to.hiveService.init();
   }
 
-  static Future<void> _initControllerFields() async {
+  static Future<void> initControllerFields() async {
     // Check if this is the first time the app has been opened
     if (AppController.to.hiveService.preferencesBox.containsKey("everOpened")) {
       AppController.to.firstPage = const HomePage();
@@ -55,6 +55,7 @@ class InitService {
         0.0;
 
     // Load the period (weekly) records
+    AppController.to.weeklyRecords.clear();
     AppController.to.weeklyRecords.addAll(await FinancialRecord.getThisWeek());
     AppController.to.weeklyRecordsHook();
   }
@@ -64,7 +65,7 @@ class InitService {
     AppController.to.appVersion = pi.version;
   }
 
-  static void _initAppTheme() {
+  static void initAppTheme() {
     // Set the previously selected theme
     if (!AppController.to.hiveService.preferencesBox.containsKey("theme")) {
       // If it has never been previously set, initialize it with the default

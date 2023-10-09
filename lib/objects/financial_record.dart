@@ -1,6 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/category.dart';
 import 'package:connie/objects/category_on_record.dart';
+import 'package:connie/objects/parseable_object.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -10,7 +11,8 @@ part 'financial_record.g.dart';
 // Generate script: dart run build_runner build
 
 @HiveType(typeId: 0)
-class FinancialRecord {
+class FinancialRecord implements ParseableObject {
+  @override
   @HiveField(0)
   String id;
 
@@ -31,8 +33,30 @@ class FinancialRecord {
     required this.title,
     required this.amount,
     required this.date,
-    required this.comment,
+    this.comment,
   });
+
+  factory FinancialRecord.fromMap(Map map) {
+    return FinancialRecord(
+      id: map["id"],
+      title: map["title"],
+      amount: double.parse(map["amount"].toString()),
+      date: DateTime.parse(map["date"]),
+      comment: map["comment"],
+    );
+  }
+
+  @override
+  Map toMap() {
+    return {
+      "objtype": "FinancialRecords",
+      "id": id,
+      "title": title,
+      "amount": amount,
+      "date": date.toIso8601String(),
+      "comment": comment,
+    };
+  }
 
   Future<void> save(List<Category> categories) async {
     if (!AppController.to.hiveService.financialRecordBox.containsKey(id)) {

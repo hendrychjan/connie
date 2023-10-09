@@ -13,8 +13,25 @@ class Expense extends FinancialRecord {
     required super.title,
     required super.amount,
     required super.date,
-    required super.comment,
+    super.comment,
   });
+
+  @override
+  factory Expense.fromMap(Map map) {
+    return Expense(
+      id: map["id"],
+      title: map["title"],
+      amount: double.parse(map["amount"].toString()),
+      date: DateTime.parse(map["date"]),
+    );
+  }
+
+  @override
+  Map toMap() {
+    Map map = super.toMap();
+    map["objtype"] = "Expense";
+    return map;
+  }
 
   static Future<Expense?> getById(String id) async {
     return await AppController.to.hiveService.financialRecordBox.get(id)
