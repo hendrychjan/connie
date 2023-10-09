@@ -55,6 +55,7 @@ class InitService {
         0.0;
 
     // Load the period (weekly) records
+    AppController.to.weeklyRecords.clear();
     AppController.to.weeklyRecords.addAll(await FinancialRecord.getThisWeek());
     AppController.to.weeklyRecordsHook();
   }

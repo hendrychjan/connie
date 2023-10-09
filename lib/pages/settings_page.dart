@@ -1,6 +1,10 @@
 import 'package:connie/getx/app_controller.dart';
+import 'package:connie/pages/home_page.dart';
+import 'package:connie/services/backup_service.dart';
 import 'package:connie/ui/local_theme.dart';
 import 'package:connie/widgets/common/form/form_field_dropdown.dart';
+import 'package:connie/widgets/common/info_label_widget.dart';
+import 'package:connie/widgets/common/loading_elevated_button.dart';
 import 'package:connie/widgets/common/loading_text_button.dart';
 import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
@@ -67,14 +71,95 @@ class _DataSectionState extends State<_DataSection> {
     await AppController.to.backupService.backupApplicationData();
   }
 
+  Future<void> _handleStartBackupRestore(MergeStrategy strategy) async {
+    Get.back();
+    Get.dialog(AlertDialog(
+      title: const Text("Restore backup"),
+      content: const Text(
+        "This action is going to alter the application data. Once you click \"Start\", it cannot be taken back. If you are not 100% sure of what are you doing, it is recommended to reach out for help, or at least backup your current data.",
+      ),
+      actions: [
+        LoadingTextButton(
+          onPressed: () async {
+            await AppController.to.backupService
+                .restoreApplicationData(strategy);
+            Get.offAll(() => const HomePage());
+          },
+          icon: const Icon(Icons.warning),
+          label: "Start",
+        ),
+        ElevatedButton(
+          onPressed: Get.back,
+          child: const Text("Cancel"),
+        ),
+      ],
+    ));
+  }
+
+  Future<void> _handleOpenRestoreDataDialog() async {
+    Get.dialog(AlertDialog(
+      title: const Text("Restore backup"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(),
+          LoadingElevatedButton(
+            onPressed: () async =>
+                await _handleStartBackupRestore(MergeStrategy.replaceAll),
+            label: "Replace all",
+            icon: const Icon(Icons.published_with_changes),
+          ),
+          const InfoLabelWidget(
+            message:
+                "Completely replace the current app state with the backup data.",
+          ),
+          const Divider(),
+          // NOTE: DO NOT DELETE THESE!! The remaining two merge strategies are
+          // almost ready, they just need a few tweaks, and are expected to be
+          // finished in the near future
+          // LoadingElevatedButton(
+          //   onPressed: () async =>
+          //       await _handleStartBackupRestore(MergeStrategy.forward),
+          //   label: "Merge - forward",
+          //   icon: const Icon(Icons.redo),
+          // ),
+          // const InfoLabelWidget(
+          //   message:
+          //       "Keep the existing app data with the backup, but treat the backup data as primary/newest.",
+          // ),
+          // const Divider(),
+          // LoadingElevatedButton(
+          //   onPressed: () async => await _handleStartBackupRestore(
+          //     MergeStrategy.append,
+          //   ),
+          //   label: "Merge - append",
+          //   icon: const Icon(Icons.add),
+          // ),
+          // const InfoLabelWidget(
+          //   message:
+          //       "Keep the existing app data with the backup, but treat the current application data as primary/newest.",
+          // ),
+          // const Divider(),
+        ],
+      ),
+      actions: [TextButton(onPressed: Get.back, child: const Text("Cancel"))],
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LoadingTextButton(
           onPressed: _handleBackupData,
           icon: const Icon(Icons.cloud_upload),
           label: "Create backup",
+        ),
+        LoadingTextButton(
+          onPressed: _handleOpenRestoreDataDialog,
+          icon: const Icon(Icons.cloud_download),
+          label: "Restore backup",
         ),
         TextButton.icon(
           onPressed: _openPrivacyNoticeDialog,
