@@ -1,6 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/category_on_record.dart';
 import 'package:connie/objects/financial_record.dart';
+import 'package:connie/objects/parseable_object.dart';
 import 'package:hive/hive.dart';
 
 part 'category.g.dart';
@@ -8,7 +9,8 @@ part 'category.g.dart';
 // Generate script: dart run build_runner build
 
 @HiveType(typeId: 3)
-class Category {
+class Category implements ParseableObject {
+  @override
   @HiveField(0)
   String id;
 
@@ -24,6 +26,7 @@ class Category {
     required this.colorHex,
   });
 
+  @override
   factory Category.fromMap(Map map) {
     return Category(
       id: map["id"],
@@ -32,13 +35,12 @@ class Category {
     );
   }
 
-  Map toMap() {
-    return {
-      "id": id,
-      "title": title,
-      "colorHex": colorHex,
-    };
-  }
+  @override
+  Map toMap() => {
+        "id": id,
+        "title": title,
+        "colorHex": colorHex,
+      };
 
   Future<void> save() async {
     await AppController.to.hiveService.categoryBox.put(id, this);

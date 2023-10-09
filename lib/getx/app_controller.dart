@@ -1,5 +1,6 @@
 import 'package:connie/objects/expense.dart';
 import 'package:connie/objects/financial_record.dart';
+import 'package:connie/services/backup_service.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class AppController extends GetxController {
       RxList<FinancialRecord>.empty(growable: true);
 
   HiveService hiveService = HiveService();
+  BackupService backupService = BackupService();
 
   /// This function should be run each time the 'weeklyRecords' field gets
   /// updated

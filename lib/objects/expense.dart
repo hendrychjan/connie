@@ -16,6 +16,7 @@ class Expense extends FinancialRecord {
     super.comment,
   });
 
+  @override
   factory Expense.fromMap(Map map) {
     return Expense(
       id: map["id"],

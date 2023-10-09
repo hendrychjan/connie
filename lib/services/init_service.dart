@@ -19,7 +19,7 @@ class InitService {
     await _initControllerServices();
     await initControllerFields();
     await _initAppInfo();
-    _initAppTheme();
+    initAppTheme();
   }
 
   static void _registerGetxSingletons() {
@@ -64,7 +64,7 @@ class InitService {
     AppController.to.appVersion = pi.version;
   }
 
-  static void _initAppTheme() {
+  static void initAppTheme() {
     // Set the previously selected theme
     if (!AppController.to.hiveService.preferencesBox.containsKey("theme")) {
       // If it has never been previously set, initialize it with the default

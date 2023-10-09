@@ -1,7 +1,7 @@
 import 'package:connie/forms/first_time_setup_form.dart';
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/home_page.dart';
-import 'package:connie/services/hive_service.dart';
+import 'package:connie/services/backup_service.dart';
 import 'package:connie/widgets/common/error_dialog.dart';
 import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +32,8 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
 
   Future<void> _startFromBackup() async {
     try {
-      await AppController.to.hiveService.restoreApplicationdata(
-        BackupRestoreStrategy.replaceAll,
+      await AppController.to.backupService.restoreApplicationData(
+        MergeStrategy.replaceAll,
       );
       Get.offAll(() => const HomePage());
     } catch (e) {
