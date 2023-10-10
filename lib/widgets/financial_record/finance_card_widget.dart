@@ -28,7 +28,8 @@ class _FinanceCardWidgetState extends State<FinanceCardWidget> {
             padding: const EdgeInsets.only(top: 20),
             child: Obx(
               () => Text(
-                AppController.to.currencyFormat.format(widget.value.value),
+                AppController.to.currencyFormat.value!
+                    .format(widget.value.value),
                 style: TextStyle(
                   fontSize: 30,
                   color: widget.color,

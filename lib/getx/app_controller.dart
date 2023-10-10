@@ -13,8 +13,6 @@ class AppController extends GetxController {
   String appVersion = "";
   late Widget firstPage;
 
-  late NumberFormat currencyFormat;
-
   RxBool showDecimals = false.obs;
   RxString currency = "Kč".obs;
 
@@ -25,6 +23,7 @@ class AppController extends GetxController {
 
   HiveService hiveService = HiveService();
   BackupService backupService = BackupService();
+  Rxn<NumberFormat> currencyFormat = Rxn<NumberFormat>();
 
   /// This function should be run each time the 'weeklyRecords' field gets
   /// updated

@@ -96,7 +96,7 @@ class InitService {
 
     // Build the currency format
     String locale = await findSystemLocale();
-    AppController.to.currencyFormat = NumberFormat.currency(
+    AppController.to.currencyFormat.value = NumberFormat.currency(
       locale: locale,
       decimalDigits: (AppController.to.showDecimals.value) ? 2 : 0,
       symbol: AppController.to.currency.value,

@@ -39,7 +39,7 @@ class _FinancialRecordsListWidgetState
   Widget _renderTitle(FinancialRecord record) {
     if (record is Expense) {
       return Text(
-        AppController.to.currencyFormat.format(record.amount),
+        AppController.to.currencyFormat.value!.format(record.amount),
         style: const TextStyle(
           color: Colors.redAccent,
         ),
@@ -48,7 +48,7 @@ class _FinancialRecordsListWidgetState
 
     if (record is Income) {
       return Text(
-        AppController.to.currencyFormat.format(record.amount),
+        AppController.to.currencyFormat.value!.format(record.amount),
         style: const TextStyle(
           color: Colors.greenAccent,
         ),
