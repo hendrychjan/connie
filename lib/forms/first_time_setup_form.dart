@@ -1,3 +1,4 @@
+import 'package:connie/widgets/common/form/form_field_checkbox.dart';
 import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,8 @@ class FirstTimeSetupForm extends StatefulWidget {
 class _FirstTimeSetupFormState extends State<FirstTimeSetupForm> {
   final _formKey = GlobalKey<FormState>();
   final _currentBalanceController = TextEditingController();
+  final _showDecimalsController = TextEditingController(text: "false");
+  final _currencyController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,15 @@ class _FirstTimeSetupFormState extends State<FirstTimeSetupForm> {
             controller: _currentBalanceController,
             validationRules: const ['required'],
           ),
+          FormFieldCheckbox(
+            controller: _showDecimalsController,
+            label: "Show decimals",
+          ),
+          FormFieldText(
+            hint: "Currency",
+            controller: _currencyController,
+            validationRules: const ["required"],
+          ),
           ElevatedButton(
             onPressed: () {
               if (!_formKey.currentState!.validate()) return;
@@ -35,6 +47,9 @@ class _FirstTimeSetupFormState extends State<FirstTimeSetupForm> {
               widget.onSubmit({
                 "currentBalance":
                     double.tryParse(_currentBalanceController.text) ?? 0.0,
+                "showDecimals":
+                    bool.tryParse(_showDecimalsController.text) ?? true,
+                "currency": _currencyController.text,
               });
             },
             child: const Text("Continue"),

@@ -1,3 +1,4 @@
+import 'package:connie/getx/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class _FinanceCardWidgetState extends State<FinanceCardWidget> {
             padding: const EdgeInsets.only(top: 20),
             child: Obx(
               () => Text(
-                "${widget.value} Kč",
+                AppController.to.currencyFormat.format(widget.value.value),
                 style: TextStyle(
                   fontSize: 30,
                   color: widget.color,

@@ -1,8 +1,11 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/home_page.dart';
 import 'package:connie/services/backup_service.dart';
+import 'package:connie/services/init_service.dart';
 import 'package:connie/ui/local_theme.dart';
+import 'package:connie/widgets/common/form/form_field_checkbox.dart';
 import 'package:connie/widgets/common/form/form_field_dropdown.dart';
+import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:connie/widgets/common/info_label_widget.dart';
 import 'package:connie/widgets/common/loading_elevated_button.dart';
 import 'package:connie/widgets/common/loading_text_button.dart';
@@ -223,6 +226,16 @@ class _AppearanceSection extends StatefulWidget {
 
 class __AppearanceSectionState extends State<_AppearanceSection> {
   final _themeController = TextEditingController();
+  final _showDecimalsController = TextEditingController();
+  final _currencyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _showDecimalsController.text =
+        AppController.to.showDecimals.value.toString();
+    _currencyController.text = AppController.to.currency.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +258,26 @@ class __AppearanceSectionState extends State<_AppearanceSection> {
                 .put("theme", _themeController.text);
             LocalTheme.changeThemeMode(_themeController.text);
           },
-        )
+        ),
+        FormFieldCheckbox(
+          controller: _showDecimalsController,
+          label: "Show decimals",
+          onChanged: (value) async {
+            AppController.to.showDecimals.value = bool.parse(value.toString());
+            AppController.to.hiveService.preferencesBox
+                .put("showDecimals", value);
+            await InitService.initAppAppearance();
+          },
+        ),
+        FormFieldText(
+          hint: "Currency",
+          controller: _currencyController,
+          onSubmit: (String value) async {
+            AppController.to.currency.value = value;
+            AppController.to.hiveService.preferencesBox.put("currency", value);
+            await InitService.initAppAppearance();
+          },
+        ),
       ],
     );
   }

@@ -10,16 +10,20 @@ import 'package:connie/ui/local_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class InitService {
   static Future<void> initApp() async {
     _registerGetxSingletons();
+    await _initIntl();
     await _initHive();
     await _initControllerServices();
     await initControllerFields();
     await _initAppInfo();
-    initAppTheme();
+    await initAppAppearance();
   }
 
   static void _registerGetxSingletons() {
@@ -41,18 +45,24 @@ class InitService {
   }
 
   static Future<void> initControllerFields() async {
+    Box preferences = AppController.to.hiveService.preferencesBox;
+
     // Check if this is the first time the app has been opened
-    if (AppController.to.hiveService.preferencesBox.containsKey("everOpened")) {
+    if (preferences.containsKey("everOpened")) {
       AppController.to.firstPage = const HomePage();
     } else {
       AppController.to.firstPage = const FirstTimeSetupPage();
     }
 
     // Load the currentBalance
-    AppController.to.currentBalance.value = (await AppController
-            .to.hiveService.preferencesBox
-            .get("currentBalance")) ??
-        0.0;
+    AppController.to.currentBalance.value =
+        (preferences.get("currentBalance")) ?? 0.0;
+
+    // Load the formatting settings
+    AppController.to.showDecimals.value =
+        preferences.get("showDecimals") ?? false;
+    AppController.to.currency.value = preferences.get("currency") ??
+        (await AppController.getDefaultCurrencySymbol());
 
     // Load the period (weekly) records
     AppController.to.weeklyRecords.clear();
@@ -65,7 +75,12 @@ class InitService {
     AppController.to.appVersion = pi.version;
   }
 
-  static void initAppTheme() {
+  static Future<void> _initIntl() async {
+    String locale = await findSystemLocale();
+    await initializeDateFormatting(locale);
+  }
+
+  static Future<void> initAppAppearance() async {
     // Set the previously selected theme
     if (!AppController.to.hiveService.preferencesBox.containsKey("theme")) {
       // If it has never been previously set, initialize it with the default
@@ -78,5 +93,13 @@ class InitService {
     String theme =
         AppController.to.hiveService.preferencesBox.get("theme") ?? "";
     LocalTheme.changeThemeMode(theme);
+
+    // Build the currency format
+    String locale = await findSystemLocale();
+    AppController.to.currencyFormat = NumberFormat.currency(
+      locale: locale,
+      decimalDigits: (AppController.to.showDecimals.value) ? 2 : 0,
+      symbol: AppController.to.currency.value,
+    );
   }
 }

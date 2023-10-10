@@ -13,6 +13,7 @@ import 'package:connie/services/init_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -98,7 +99,7 @@ class BackupService {
     // Finally, run the hooks required to make the current app's state react
     // to the changes in hive boxes
     await InitService.initControllerFields();
-    InitService.initAppTheme();
+    await InitService.initAppAppearance();
   }
 
   /// Provide the backup file to the user
@@ -131,6 +132,8 @@ class BackupService {
     backup["preferences"] = {
       "theme": preferencesBox.get("theme"),
       "currentBalance": preferencesBox.get("currentBalance"),
+      "showDecimals": preferencesBox.get("showDecimals"),
+      "currency": preferencesBox.get("currency"),
     };
 
     // Get the categories
@@ -219,9 +222,15 @@ class BackupService {
       String theme = preferences["theme"];
       double currentBalance =
           double.parse(preferences["currentBalance"].toString());
+      bool showDecimals =
+          bool.tryParse(preferences["showDecimals"].toString()) ?? false;
+      String currency = preferences["currency"] ??
+          (await AppController.getDefaultCurrencySymbol());
 
       await tempPreferencesBox.put("theme", theme);
       await tempPreferencesBox.put("currentBalance", currentBalance);
+      await tempPreferencesBox.put("showDecimals", showDecimals);
+      await tempPreferencesBox.put("currency", currency);
 
       // Decode categories
       await ParseableObject.parseMapsIntoBox<Category>(
