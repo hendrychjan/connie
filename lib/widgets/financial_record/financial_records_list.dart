@@ -1,3 +1,4 @@
+import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/expense.dart';
 import 'package:connie/objects/financial_record.dart';
 import 'package:connie/objects/income.dart';
@@ -38,7 +39,7 @@ class _FinancialRecordsListWidgetState
   Widget _renderTitle(FinancialRecord record) {
     if (record is Expense) {
       return Text(
-        record.amount.toString(),
+        AppController.to.currencyFormat.value!.format(record.amount),
         style: const TextStyle(
           color: Colors.redAccent,
         ),
@@ -47,7 +48,7 @@ class _FinancialRecordsListWidgetState
 
     if (record is Income) {
       return Text(
-        record.amount.toString(),
+        AppController.to.currencyFormat.value!.format(record.amount),
         style: const TextStyle(
           color: Colors.greenAccent,
         ),

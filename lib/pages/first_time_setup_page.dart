@@ -2,10 +2,13 @@ import 'package:connie/forms/first_time_setup_form.dart';
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/pages/home_page.dart';
 import 'package:connie/services/backup_service.dart';
+import 'package:connie/services/init_service.dart';
 import 'package:connie/widgets/common/error_dialog.dart';
+import 'package:connie/widgets/common/loading_text_button.dart';
 import 'package:connie/widgets/common/privacy_notice_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 class FirstTimeSetupPage extends StatefulWidget {
   const FirstTimeSetupPage({super.key});
@@ -16,12 +19,23 @@ class FirstTimeSetupPage extends StatefulWidget {
 
 class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
   Future<void> _handleSubmit(Map<String, dynamic> payload) async {
+    Box preferences = AppController.to.hiveService.preferencesBox;
+
     // Current balance
     AppController.to.currentBalance.value = payload["currentBalance"];
-    AppController.to.hiveService.preferencesBox
-        .put("currentBalance", payload["currentBalance"]);
+    await preferences.put("currentBalance", payload["currentBalance"]);
 
-    AppController.to.hiveService.preferencesBox.put("everOpened", true);
+    // Show decimals
+    AppController.to.showDecimals.value = payload["showDecimals"];
+    await preferences.put("showDecimals", payload["showDecimals"]);
+
+    // Currency
+    AppController.to.currency.value = payload["currency"];
+    await preferences.put("showDecimals", payload["currency"]);
+
+    preferences.put("everOpened", true);
+
+    await InitService.initAppAppearance();
 
     Get.offAll(() => const HomePage());
   }
@@ -66,16 +80,18 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: TextButton(
+            child: LoadingTextButton(
               onPressed: _startFromBackup,
-              child: const Text("Start from backup"),
+              icon: const Icon(Icons.cloud_download),
+              label: "Start from backup",
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: TextButton(
+            child: TextButton.icon(
               onPressed: _openPrivacyNotice,
-              child: const Text("How do we handle your data?"),
+              icon: const Icon(Icons.info),
+              label: const Text("How do we handle your data?"),
             ),
           ),
         ],

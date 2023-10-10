@@ -4,12 +4,17 @@ import 'package:connie/services/backup_service.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
 
 class AppController extends GetxController {
   static AppController get to => Get.find();
 
   String appVersion = "";
   late Widget firstPage;
+
+  RxBool showDecimals = false.obs;
+  RxString currency = "Kč".obs;
 
   RxDouble currentBalance = 0.0.obs;
   RxDouble periodExpenses = 0.0.obs;
@@ -18,6 +23,7 @@ class AppController extends GetxController {
 
   HiveService hiveService = HiveService();
   BackupService backupService = BackupService();
+  Rxn<NumberFormat> currencyFormat = Rxn<NumberFormat>();
 
   /// This function should be run each time the 'weeklyRecords' field gets
   /// updated
@@ -32,5 +38,10 @@ class AppController extends GetxController {
         periodExpenses.value += r.amount;
       }
     }
+  }
+
+  static Future<String> getDefaultCurrencySymbol() async {
+    String locale = await findSystemLocale();
+    return NumberFormat.currency(locale: locale).currencySymbol;
   }
 }
