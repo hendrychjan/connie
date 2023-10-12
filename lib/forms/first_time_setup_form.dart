@@ -3,7 +3,7 @@ import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
 
 class FirstTimeSetupForm extends StatefulWidget {
-  final Function onSubmit;
+  final Future<void> Function(Map<String, dynamic>) onSubmit;
   const FirstTimeSetupForm({
     super.key,
     required this.onSubmit,
@@ -39,20 +39,25 @@ class _FirstTimeSetupFormState extends State<FirstTimeSetupForm> {
             hint: "Currency",
             controller: _currencyController,
             validationRules: const ["required"],
+            tooltipMessage:
+                "A symbol that will be displayed next to price tags",
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (!_formKey.currentState!.validate()) return;
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: ElevatedButton(
+              onPressed: () {
+                if (!_formKey.currentState!.validate()) return;
 
-              widget.onSubmit({
-                "currentBalance":
-                    double.tryParse(_currentBalanceController.text) ?? 0.0,
-                "showDecimals":
-                    bool.tryParse(_showDecimalsController.text) ?? true,
-                "currency": _currencyController.text,
-              });
-            },
-            child: const Text("Continue"),
+                widget.onSubmit({
+                  "currentBalance":
+                      double.tryParse(_currentBalanceController.text) ?? 0.0,
+                  "showDecimals":
+                      bool.tryParse(_showDecimalsController.text) ?? true,
+                  "currency": _currencyController.text,
+                });
+              },
+              child: const Text("Continue"),
+            ),
           ),
         ],
       ),

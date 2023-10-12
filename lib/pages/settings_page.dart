@@ -277,6 +277,7 @@ class __AppearanceSectionState extends State<_AppearanceSection> {
             AppController.to.hiveService.preferencesBox.put("currency", value);
             await InitService.initAppAppearance();
           },
+          tooltipMessage: "A symbol that will be displayed next to price tags",
         ),
       ],
     );

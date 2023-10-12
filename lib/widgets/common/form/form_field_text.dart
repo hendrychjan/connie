@@ -17,6 +17,9 @@ class FormFieldText extends StatefulWidget {
   final bool? readOnly;
   final Function? onTap;
   final Color? themeColor;
+  final TextInputAction? textInputAction;
+  final String? tooltipMessage;
+  final String? placeholder;
 
   const FormFieldText({
     required this.hint,
@@ -33,6 +36,9 @@ class FormFieldText extends StatefulWidget {
     this.readOnly = false,
     this.onTap,
     this.themeColor,
+    this.textInputAction = TextInputAction.done,
+    this.tooltipMessage,
+    this.placeholder,
     super.key,
   });
 
@@ -55,6 +61,14 @@ class _FormFieldTextState extends State<FormFieldText> {
           fillColor:
               widget.themeColor ?? Get.theme.primaryColor.withOpacity(0.05),
           filled: true,
+          hintText: widget.placeholder,
+          suffixIcon: (widget.tooltipMessage != null)
+              ? Tooltip(
+                  triggerMode: TooltipTriggerMode.tap,
+                  message: widget.tooltipMessage,
+                  child: const Icon(Icons.info),
+                )
+              : null,
         ),
         obscureText: widget.obscureText,
         validator: (value) {
@@ -71,6 +85,10 @@ class _FormFieldTextState extends State<FormFieldText> {
         enabled: widget.enabled,
         readOnly: widget.readOnly ?? false,
         onTap: (widget.onTap != null) ? () => widget.onTap!() : () {},
+        textInputAction: widget.textInputAction,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
       ),
     );
   }
