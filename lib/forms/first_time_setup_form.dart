@@ -39,6 +39,8 @@ class _FirstTimeSetupFormState extends State<FirstTimeSetupForm> {
             hint: "Currency",
             controller: _currencyController,
             validationRules: const ["required"],
+            tooltipMessage:
+                "A symbol that will be displayed next to price tags",
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
