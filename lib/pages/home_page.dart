@@ -25,18 +25,18 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton.icon(
             onPressed: () {
               Get.back();
-              Get.to(() => const ExpenseFormPage());
-            },
-            icon: const Icon(Icons.shopping_cart),
-            label: const Text("Expense"),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Get.back();
               Get.to(() => const IncomeFormPage());
             },
             icon: const Icon(Icons.add_card),
             label: const Text("Income"),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Get.back();
+              Get.to(() => const ExpenseFormPage());
+            },
+            icon: const Icon(Icons.shopping_cart),
+            label: const Text("Expense"),
           ),
         ],
       ),

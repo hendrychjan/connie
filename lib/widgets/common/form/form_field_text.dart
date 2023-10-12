@@ -17,6 +17,7 @@ class FormFieldText extends StatefulWidget {
   final bool? readOnly;
   final Function? onTap;
   final Color? themeColor;
+  final TextInputAction? textInputAction;
 
   const FormFieldText({
     required this.hint,
@@ -33,6 +34,7 @@ class FormFieldText extends StatefulWidget {
     this.readOnly = false,
     this.onTap,
     this.themeColor,
+    this.textInputAction = TextInputAction.done,
     super.key,
   });
 
@@ -71,6 +73,10 @@ class _FormFieldTextState extends State<FormFieldText> {
         enabled: widget.enabled,
         readOnly: widget.readOnly ?? false,
         onTap: (widget.onTap != null) ? () => widget.onTap!() : () {},
+        textInputAction: widget.textInputAction,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
       ),
     );
   }

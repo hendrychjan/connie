@@ -8,7 +8,7 @@ import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseForm extends StatefulWidget {
-  final Function onSubmit;
+  final Future<void> Function(Expense, List<Category>) onSubmit;
   final Expense? initialExpense;
   const ExpenseForm({
     super.key,
@@ -54,68 +54,72 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                FormFieldText(
-                  hint: "Title",
-                  icon: const Icon(Icons.edit),
-                  controller: _titleController,
-                  validationRules: const ["required"],
-                ),
-                FormFieldText(
-                  hint: "Amount",
-                  icon: const Icon(Icons.attach_money),
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  validationRules: const ["required"],
-                ),
-                FormFieldDatetime(
-                  hint: "Date",
-                  icon: const Icon(Icons.calendar_month),
-                  controller: _dateController,
-                ),
-                FormFieldText(
-                  hint: "Comment",
-                  icon: const Icon(Icons.notes),
-                  controller: _commentController,
-                  minLines: 3,
-                  maxLines: 10,
-                ),
-                SelectCategoriesWidget(selected: _categories),
-                const FormFieldDivider(),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (!_formKey.currentState!.validate()) return;
-
-                    // In case of an Expense, the 'amount' should always be
-                    // a negative number
-                    double actualAmount =
-                        double.tryParse(_amountController.text) ?? 0;
-                    if (actualAmount > 0) actualAmount = -actualAmount;
-
-                    await widget.onSubmit(
-                      Expense(
-                        id: widget.initialExpense?.id ??
-                            HiveService.generateId(),
-                        title: _titleController.text,
-                        amount: actualAmount,
-                        date: DateTime.tryParse(_dateController.text) ??
-                            DateTime.now(),
-                        comment: _commentController.text,
-                      ),
-                      _categories,
-                    );
-                  },
-                  child: Text(
-                    (widget.initialExpense == null) ? "Create" : "Update",
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  FormFieldText(
+                    hint: "Title",
+                    icon: const Icon(Icons.edit),
+                    controller: _titleController,
+                    validationRules: const ["required"],
+                    textInputAction: TextInputAction.next,
                   ),
-                ),
-              ],
-            ),
+                  FormFieldText(
+                    hint: "Amount",
+                    icon: const Icon(Icons.attach_money),
+                    controller: _amountController,
+                    keyboardType: TextInputType.number,
+                    validationRules: const ["required"],
+                    textInputAction: TextInputAction.next,
+                  ),
+                  FormFieldDatetime(
+                    hint: "Date",
+                    icon: const Icon(Icons.calendar_month),
+                    controller: _dateController,
+                  ),
+                  FormFieldText(
+                    hint: "Comment",
+                    icon: const Icon(Icons.notes),
+                    controller: _commentController,
+                    minLines: 3,
+                    maxLines: 10,
+                  ),
+                  SelectCategoriesWidget(selected: _categories),
+                  const FormFieldDivider(),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) return;
+
+                      // In case of an Expense, the 'amount' should always be
+                      // a negative number
+                      double actualAmount =
+                          double.tryParse(_amountController.text) ?? 0;
+                      if (actualAmount > 0) actualAmount = -actualAmount;
+
+                      await widget.onSubmit(
+                        Expense(
+                          id: widget.initialExpense?.id ??
+                              HiveService.generateId(),
+                          title: _titleController.text,
+                          amount: actualAmount,
+                          date: DateTime.tryParse(_dateController.text) ??
+                              DateTime.now(),
+                          comment: _commentController.text,
+                        ),
+                        _categories,
+                      );
+                    },
+                    child: Text(
+                      (widget.initialExpense == null) ? "Create" : "Update",
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }

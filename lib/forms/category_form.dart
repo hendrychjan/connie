@@ -5,7 +5,7 @@ import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {
-  final Function onSubmit;
+  final Future<void> Function(Category) onSubmit;
   final Category? initialCategory;
   const CategoryForm({
     required this.onSubmit,
@@ -43,6 +43,7 @@ class _CategoryFormState extends State<CategoryForm> {
             icon: const Icon(Icons.edit),
             controller: _titleController,
             validationRules: const ["required"],
+            textInputAction: TextInputAction.done,
           ),
           FormFieldColor(
             hint: "Color",

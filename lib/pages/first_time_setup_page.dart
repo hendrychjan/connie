@@ -31,7 +31,7 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
 
     // Currency
     AppController.to.currency.value = payload["currency"];
-    await preferences.put("showDecimals", payload["currency"]);
+    await preferences.put("currency", payload["currency"]);
 
     preferences.put("everOpened", true);
 
@@ -61,40 +61,39 @@ class _FirstTimeSetupPageState extends State<FirstTimeSetupPage> {
       appBar: AppBar(
         title: const Text("Quick setup"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            child: Text(
-              "Before we begin...",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: Text(
+                "Before we begin...",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
               ),
             ),
-          ),
-          FirstTimeSetupForm(onSubmit: _handleSubmit),
-          Expanded(
-            child: Container(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: LoadingTextButton(
-              onPressed: _startFromBackup,
-              icon: const Icon(Icons.cloud_download),
-              label: "Start from backup",
+            FirstTimeSetupForm(onSubmit: _handleSubmit),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: LoadingTextButton(
+                onPressed: _startFromBackup,
+                icon: const Icon(Icons.cloud_download),
+                label: "Start from backup",
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: TextButton.icon(
-              onPressed: _openPrivacyNotice,
-              icon: const Icon(Icons.info),
-              label: const Text("How do we handle your data?"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: TextButton.icon(
+                onPressed: _openPrivacyNotice,
+                icon: const Icon(Icons.info),
+                label: const Text("How do we handle your data?"),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
