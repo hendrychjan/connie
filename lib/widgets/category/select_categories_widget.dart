@@ -2,9 +2,10 @@ import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/category.dart';
 import 'package:connie/widgets/category/category_chip_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SelectCategoriesWidget extends StatefulWidget {
-  final List<Category> selected;
+  final RxList<Category> selected;
   const SelectCategoriesWidget({
     super.key,
     required this.selected,
@@ -19,16 +20,27 @@ class _SelectCategoriesWidgetState extends State<SelectCategoriesWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Categories",
                 style: TextStyle(
                   fontSize: 16,
                 ),
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              IconButton(
+                onPressed: () {
+                  widget.selected.clear();
+                  widget.selected
+                      .addAll(AppController.to.hiveService.categoryBox.values);
+                },
+                icon: const Icon(Icons.check_box),
               ),
             ],
           ),
@@ -43,16 +55,18 @@ class _SelectCategoriesWidgetState extends State<SelectCategoriesWidget> {
                   in AppController.to.hiveService.categoryBox.values)
                 Padding(
                   padding: const EdgeInsets.all(3),
-                  child: CategoryChipWidget(
-                    category: category,
-                    initiallySelected: widget.selected.contains(category),
-                    onValueChanged: (bool selected) {
-                      if (selected) {
-                        widget.selected.add(category);
-                      } else {
-                        widget.selected.remove(category);
-                      }
-                    },
+                  child: Obx(
+                    () => CategoryChipWidget(
+                      category: category,
+                      initiallySelected: widget.selected.contains(category),
+                      onValueChanged: (bool selected) {
+                        if (selected) {
+                          widget.selected.add(category);
+                        } else {
+                          widget.selected.remove(category);
+                        }
+                      },
+                    ),
                   ),
                 ),
             ],

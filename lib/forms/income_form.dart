@@ -6,6 +6,7 @@ import 'package:connie/widgets/common/form/form_field_datetime.dart';
 import 'package:connie/widgets/common/form/form_field_divider.dart';
 import 'package:connie/widgets/common/form/form_field_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IncomeForm extends StatefulWidget {
   final Future<void> Function(Income, List<Category>) onSubmit;
@@ -27,7 +28,7 @@ class _IncomeFormState extends State<IncomeForm> {
   final _amountController = TextEditingController();
   final _dateController = TextEditingController();
   final _commentController = TextEditingController();
-  final List<Category> _categories = List<Category>.empty(growable: true);
+  final RxList<Category> _categories = RxList<Category>.empty(growable: true);
 
   @override
   void initState() {

@@ -1,6 +1,7 @@
 import 'package:connie/getx/app_controller.dart';
 import 'package:connie/objects/category.dart';
 import 'package:connie/objects/category_on_record.dart';
+import 'package:connie/objects/financial_records_filter.dart';
 import 'package:connie/objects/parseable_object.dart';
 import 'package:connie/services/hive_service.dart';
 import 'package:get/get.dart';
@@ -118,6 +119,41 @@ class FinancialRecord implements ParseableObject {
 
   static Future<FinancialRecord?> getById(String id) async {
     return await AppController.to.hiveService.financialRecordBox.get(id);
+  }
+
+  static Future<List<FinancialRecord>> getAll(
+      FinancialRecordsFilter filter) async {
+    List<FinancialRecord> records = [];
+
+    List<String> categoryIds = filter.categories.map((c) => c.id).toList();
+    Set<String> recordIdsByCategories = {};
+
+    // Filter by category
+    for (var key in AppController.to.hiveService.categoryOnRecordBox.keys) {
+      CategoryOnRecord? cor =
+          await AppController.to.hiveService.categoryOnRecordBox.get(key);
+
+      if (cor == null) continue;
+
+      if (categoryIds.contains(cor.categoryId)) {
+        recordIdsByCategories.add(cor.recordId);
+      }
+    }
+
+    for (var key in AppController.to.hiveService.financialRecordBox.keys) {
+      FinancialRecord? record =
+          await AppController.to.hiveService.financialRecordBox.get(key);
+
+      if (record == null) continue;
+
+      if (record.date.isAfter(filter.dateRange.start) &&
+          record.date.isBefore(filter.dateRange.end) &&
+          recordIdsByCategories.contains(record.id)) {
+        records.add(record);
+      }
+    }
+
+    return records;
   }
 
   static Future<List<FinancialRecord>> getThisWeek() async {

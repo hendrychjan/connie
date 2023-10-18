@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NoItemsWidget extends StatefulWidget {
+  final String? title;
   final String? subtitle;
-  const NoItemsWidget({super.key, this.subtitle});
+  const NoItemsWidget({
+    super.key,
+    this.title,
+    this.subtitle,
+  });
 
   @override
   State<NoItemsWidget> createState() => _NoItemsWidgetState();
@@ -15,9 +20,9 @@ class _NoItemsWidgetState extends State<NoItemsWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "No items so far",
-            style: TextStyle(fontSize: 18),
+          Text(
+            widget.title ?? "No items so far",
+            style: const TextStyle(fontSize: 18),
           ),
           if (widget.subtitle != null)
             Padding(

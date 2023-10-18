@@ -25,7 +25,7 @@ class _FormFieldDatetimeState extends State<FormFieldDatetime> {
     return "${DateFormat.yMd().format(date)} ${DateFormat.Hm().format(date)}";
   }
 
-  void _openDateController() async {
+  void _openDateTimeDialog() async {
     DateTime? datePicked = await showDatePicker(
       context: context,
       initialDate: _selected,
@@ -71,7 +71,7 @@ class _FormFieldDatetimeState extends State<FormFieldDatetime> {
       controller: _textController,
       readOnly: true,
       icon: widget.icon,
-      onTap: _openDateController,
+      onTap: _openDateTimeDialog,
     );
   }
 }
